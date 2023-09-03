@@ -1,24 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Header from './Components/Header';
+import SearchBar from './Components/SearchBar';
+import WeatherCard from './Components/WeatherCard';
 
 function App() {
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+
+  interface WeatherData {
+    humidity: number;
+    pressure: number;
+    isRaining: boolean;
+    date: string;
+    location: string;
+    temperature: number;
+    weatherCondition: string;
+  }
+
+  const handleWeatherData = (data: WeatherData) => {
+    setWeatherData(data);
+  }
+
+  const headerProps = {
+    title: 'Weather App',
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header {...headerProps} />
+      <SearchBar onWeatherData={handleWeatherData} />
+      {weatherData && (
+        <WeatherCard
+          location={weatherData.location}
+          date={weatherData.date}
+          temperature={weatherData.temperature}
+          weatherCondition={weatherData.weatherCondition}
+          humidity={weatherData.humidity}
+          pressure={weatherData.pressure}
+          isRaining={weatherData.isRaining}
+        />
+      )}
     </div>
   );
 }
